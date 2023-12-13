@@ -16,7 +16,7 @@ contactsRouter.get("/", async (req, res, next) => {
       res.json({
          status: "success",
          code: 200,
-         data: { result },
+         data: { contacts: result },
       })
    } catch (error) {
       next(error)
