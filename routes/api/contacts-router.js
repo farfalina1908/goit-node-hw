@@ -24,19 +24,106 @@ contactsRouter.get("/", async (req, res, next) => {
 })
 
 contactsRouter.get("/:contactId", async (req, res, next) => {
-   res.json({ message: "template message" })
+   try {
+      const { contactId } = req.params
+      const result = await contactsService.getContactById(contactId)
+      if (!result) {
+         res.json({
+            message: "Not found",
+            status: "error",
+            code: 404,
+         })
+      }
+      res.json({
+         status: "success",
+         code: 200,
+         data: {
+            result,
+         },
+      })
+   } catch (error) {
+      next(error)
+   }
 })
 
 contactsRouter.post("/", async (req, res, next) => {
-   res.json({ message: "template message" })
+   try {
+      const { error } = joiSchema.validate(req.body)
+      if (error) {
+         res.json({
+            message: "missing required name field",
+            status: "error",
+            code: 400,
+         })
+      }
+
+      const { name, email, phone } = req.body
+      const result = await contactsService.addContact(name, email, phone)
+      res.status(201).json({
+         status: "success",
+         code: 201,
+         data: {
+            result,
+         },
+      })
+   } catch (error) {
+      next(error)
+   }
 })
 
 contactsRouter.delete("/:contactId", async (req, res, next) => {
-   res.json({ message: "template message" })
+   try {
+      const { contactID } = req.params
+      const result = await contactsService.removeContact(contactID)
+      if (!result) {
+         res.json({
+            message: "Not found",
+            status: "error",
+            code: 404,
+         })
+      }
+      res.json({
+         message: "contact deleted",
+         status: "success",
+         code: 200,
+         data: {
+            result,
+         },
+      })
+   } catch (error) {
+      next(error)
+   }
 })
 
 contactsRouter.put("/:contactId", async (req, res, next) => {
-   res.json({ message: "template message" })
+   try {
+      const { error } = joiSchema.validate(req.body)
+      if (error) {
+         res.json({
+            message: "missing fields",
+            status: "error",
+            code: 400,
+         })
+      }
+      const { contactId } = req.params
+      const result = await contactsService.updateContact(contactId, req.body)
+      if (!result) {
+         res.json({
+            message: "Not found",
+            status: "error",
+            code: 404,
+         })
+      }
+      res.json({
+         status: "success",
+         code: 200,
+         data: {
+            result,
+         },
+      })
+   } catch (error) {
+      next(error)
+   }
 })
 
 export default contactsRouter
