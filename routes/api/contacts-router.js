@@ -13,11 +13,7 @@ const contactsRouter = express.Router()
 contactsRouter.get("/", async (req, res, next) => {
    try {
       const result = await contactsService.listContacts()
-      res.json({
-         status: "success",
-         code: 200,
-         data: { contacts: result },
-      })
+      res.json(result)
    } catch (error) {
       next(error)
    }
@@ -28,19 +24,11 @@ contactsRouter.get("/:contactId", async (req, res, next) => {
       const { contactId } = req.params
       const result = await contactsService.getContactById(contactId)
       if (!result) {
-         res.json({
-            message: "Not found",
-            status: "error",
-            code: 404,
-         })
+         res.status(404).json({
+            message: "Not found"})
       }
-      res.json({
-         status: "success",
-         code: 200,
-         data: {
-            result,
-         },
-      })
+
+      res.json(result)
    } catch (error) {
       next(error)
    }
@@ -50,22 +38,13 @@ contactsRouter.post("/", async (req, res, next) => {
    try {
       const { error } = joiSchema.validate(req.body)
       if (error) {
-         res.json({
-            message: "missing required name field",
-            status: "error",
-            code: 400,
-         })
+         res.status(400).json({
+            message: "missing required name field"})
       }
 
       const { name, email, phone } = req.body
       const result = await contactsService.addContact(name, email, phone)
-      res.status(201).json({
-         status: "success",
-         code: 201,
-         data: {
-            result,
-         },
-      })
+      res.status(201).json(result)
    } catch (error) {
       next(error)
    }
@@ -76,20 +55,11 @@ contactsRouter.delete("/:contactId", async (req, res, next) => {
       const { contactID } = req.params
       const result = await contactsService.removeContact(contactID)
       if (!result) {
-         res.json({
-            message: "Not found",
-            status: "error",
-            code: 404,
-         })
+         res.status(404).json({
+            message: "Not found"})
       }
-      res.json({
-         message: "contact deleted",
-         status: "success",
-         code: 200,
-         data: {
-            result,
-         },
-      })
+      res.status(200).json({
+         message: "contact deleted"})
    } catch (error) {
       next(error)
    }
@@ -99,28 +69,17 @@ contactsRouter.put("/:contactId", async (req, res, next) => {
    try {
       const { error } = joiSchema.validate(req.body)
       if (error) {
-         res.json({
-            message: "missing fields",
-            status: "error",
-            code: 400,
-         })
+         res.status(400).json({
+            message: "missing fields"})
       }
+
       const { contactId } = req.params
       const result = await contactsService.updateContact(contactId, req.body)
       if (!result) {
-         res.json({
-            message: "Not found",
-            status: "error",
-            code: 404,
-         })
+         res.status(404).json({
+            message: "Not found"})
       }
-      res.json({
-         status: "success",
-         code: 200,
-         data: {
-            result,
-         },
-      })
+      res.status(200).json(result)
    } catch (error) {
       next(error)
    }
