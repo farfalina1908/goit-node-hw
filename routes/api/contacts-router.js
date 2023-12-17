@@ -2,11 +2,24 @@ import express from "express"
 import Joi from "joi"
 import contactsService from "../../models/contacts/index.js"
 
-const joiSchema = Joi.object({
-   name: Joi.string().required(),
-   email: Joi.string().required(),
-   phone: Joi.string().required(),
-})
+const contactAddSchema = Joi.object({
+   name: Joi.string().required().messages({
+      "any.required": `Required field "name" must be exist`
+   }),
+   email: Joi.string().required().messages({
+      "any.required": `Required field "email" must be exist`
+   }),
+   phone: Joi.string().required().messages({
+      "any.required": `Required field "phone" must be exist`
+   }),
+});
+
+const contactUpdateSchema = Joi.object({
+   name: Joi.string(),
+   email: Joi.string(),
+   phone: Joi.string(),
+});
+
 
 const contactsRouter = express.Router()
 
@@ -25,7 +38,8 @@ contactsRouter.get("/:contactId", async (req, res, next) => {
       const result = await contactsService.getContactById(contactId)
       if (!result) {
          res.status(404).json({
-            message: "Not found"})
+            message: "Not found",
+         });
       }
 
       res.json(result)
@@ -36,10 +50,11 @@ contactsRouter.get("/:contactId", async (req, res, next) => {
 
 contactsRouter.post("/", async (req, res, next) => {
    try {
-      const { error } = joiSchema.validate(req.body)
+      const { error } = contactAddSchema.validate(req.body);
       if (error) {
-         res.status(400).json({
-            message: "missing required name field"})
+         res.status(400).json(
+            error.message
+         )
       }
 
       const { name, email, phone } = req.body
@@ -52,14 +67,16 @@ contactsRouter.post("/", async (req, res, next) => {
 
 contactsRouter.delete("/:contactId", async (req, res, next) => {
    try {
-      const { contactID } = req.params
-      const result = await contactsService.removeContact(contactID)
+      const { contactId } = req.params
+      console.log(req.params);
+      const result = await contactsService.removeContact(contactId);
       if (!result) {
-         res.status(404).json({
+         return res.status(404).json({
             message: "Not found"})
       }
-      res.status(200).json({
-         message: "contact deleted"})
+
+      res.json({
+         message: "Contact deleted"})
    } catch (error) {
       next(error)
    }
@@ -67,10 +84,10 @@ contactsRouter.delete("/:contactId", async (req, res, next) => {
 
 contactsRouter.put("/:contactId", async (req, res, next) => {
    try {
-      const { error } = joiSchema.validate(req.body)
+      const { error } = contactUpdateSchema.validate(req.body);
       if (error) {
-         res.status(400).json({
-            message: "missing fields"})
+         res.status(400).json(error.message
+         )
       }
 
       const { contactId } = req.params

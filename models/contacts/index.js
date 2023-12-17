@@ -3,6 +3,8 @@ import path from "path"
 import { nanoid } from "nanoid"
 
 const contactsPath = path.resolve("models/contacts", "contacts.json")
+const updateContacts = (contacts) =>
+   fs.writeFile(contactsPath, JSON.stringify(contacts, null, 2));
 
 const listContacts = async () => {
    const data = await fs.readFile(contactsPath)
@@ -13,10 +15,7 @@ const listContacts = async () => {
 const getContactById = async (contactId) => {
    const contacts = await listContacts()
    const result = contacts.find((item) => contactId === item.id)
-   if (!result) {
-      return null
-   }
-   return { result }
+   return result || null
 }
 
 const removeContact = async (contactId) => {
@@ -26,11 +25,10 @@ const removeContact = async (contactId) => {
    if (idx === -1) {
       return null
    }
-   const newContacts = contacts.filter((_, index) => index !== idx)
 
-   await fs.writeFile(contactsPath, JSON.stringify(newContacts))
-
-   return contacts[idx]
+   const [result] = contacts.splice(idx, 1);
+   await updateContacts(contacts);
+   return result;
 }
 
 const addContact = async (name, email, phone) => {
