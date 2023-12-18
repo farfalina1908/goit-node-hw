@@ -52,9 +52,7 @@ contactsRouter.post("/", async (req, res, next) => {
    try {
       const { error } = contactAddSchema.validate(req.body);
       if (error) {
-         res.status(400).json(
-            error.message
-         )
+         res.status(400).json({message: error.message,})
       }
 
       const { name, email, phone } = req.body
@@ -84,6 +82,13 @@ contactsRouter.delete("/:contactId", async (req, res, next) => {
 
 contactsRouter.put("/:contactId", async (req, res, next) => {
    try {
+
+      const {length} = Object.keys(req.body);
+      if(!length) {
+          return  res.status(400).json({
+            message: "missing fields"});
+      }
+     
       const { error } = contactUpdateSchema.validate(req.body);
       if (error) {
          res.status(400).json(error.message
