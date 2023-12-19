@@ -91,7 +91,7 @@ contactsRouter.put("/:contactId", async (req, res, next) => {
      
       const { error } = contactUpdateSchema.validate(req.body);
       if (error) {
-         res.status(400).json(error.message
+         res.status(400).json({message: error.message,}
          )
       }
 
