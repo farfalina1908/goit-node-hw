@@ -18,11 +18,11 @@ const getAll = async (req, res, next) => {
 
 const getById = async (req, res, next) => {
     try {
-       const { contactId } = req.params
-       const result = await Contact.findById(contactId)
+       const { id } = req.params
+       const result = await Contact.findById(id)
        if (!result) {
 
-        throw HttpError(404, `Movie with id=${contactId} not found`);
+        throw HttpError(404, `Contact with id=${id} not found`);
         //   res.status(404).json({
         //      message: "Not found",
           };
@@ -62,10 +62,10 @@ const updateById = async (req, res, next) => {
     //       )
     //    }
  
-       const { contactId } = req.params
-       const result = await Contact.findByIdAndUpdate(contactId, req.body)
+       const { id } = req.params
+       const result = await Contact.findByIdAndUpdate(id, req.body);
        if (!result) {
-        throw HttpError(404, `Contact with id=${contactId} not found`);
+        throw HttpError(404, `Contact with id=${id} not found`);
 
         //   res.status(404).json({
         //      message: "Not found"})
@@ -91,10 +91,10 @@ const updateStatusContact = async (req, res, next) => {
     //       )
     //    }
  
-       const { contactId } = req.params
-       const result = await Contact.findByIdAndUpdate(contactId, req.body)
+       const { id } = req.params;
+       const result = await Contact.findByIdAndUpdate(id, req.body);
        if (!result) {
-        throw HttpError(404, `Contact with id=${contactId} not found`);
+        throw HttpError(404, `Contact with id=${id} not found`);
 
         //   res.status(404).json({
         //      message: "Not found"})
@@ -107,11 +107,11 @@ const updateStatusContact = async (req, res, next) => {
 
 const deleteById = async (req, res, next) => {
     try {
-       const { contactId } = req.params
+       const { id } = req.params;
        console.log(req.params);
-       const result = await Contact.findByIdAndDelete(contactId);
+       const result = await Contact.findByIdAndDelete(id);
        if (!result) {
-        throw HttpError(404, `Contact with id=${contactId} not found`);
+        throw HttpError(404, `Contact with id=${id} not found`);
 
         //   return res.status(404).json({
         //      message: "Not found"})
