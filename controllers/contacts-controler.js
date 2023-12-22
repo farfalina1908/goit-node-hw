@@ -21,10 +21,7 @@ const getById = async (req, res, next) => {
        const { id } = req.params
        const result = await Contact.findById(id)
        if (!result) {
-
         throw HttpError(404, `Contact with id=${id} not found`);
-        //   res.status(404).json({
-        //      message: "Not found",
           };
        
        res.json(result)
@@ -35,10 +32,6 @@ const getById = async (req, res, next) => {
 
  const add = async (req, res, next) => {
     try {
-    //    const { error } = contactAddSchema.validate(req.body);
-    //    if (error) {
-    //       res.status(400).json({message: error.message,})
-    //    }
        const result = await Contact.create(req.body)
        res.status(201).json(result)
     } catch (error) {
@@ -49,26 +42,10 @@ const getById = async (req, res, next) => {
 
 const updateById = async (req, res, next) => {
     try {
- 
-    //    const {length} = Object.keys(req.body);
-    //    if(!length) {
-    //        return  res.status(400).json({
-    //          message: "missing fields"});
-    //    }
-      
-    //    const { error } = contactUpdateSchema.validate(req.body);
-    //    if (error) {
-    //       res.status(400).json({message: error.message,}
-    //       )
-    //    }
- 
        const { id } = req.params
        const result = await Contact.findByIdAndUpdate(id, req.body);
        if (!result) {
         throw HttpError(404, `Contact with id=${id} not found`);
-
-        //   res.status(404).json({
-        //      message: "Not found"})
        }
        res.status(200).json(result)
     } catch (error) {
@@ -78,26 +55,10 @@ const updateById = async (req, res, next) => {
 
 const updateStatusContact = async (req, res, next) => {
     try {
- 
-    //    const {length} = Object.keys(req.body);
-    //    if(!length) {
-    //        return  res.status(400).json({
-    //          message: "missing fields"});
-    //    }
-      
-    //    const { error } = contactUpdateFavoriteSchema.validate(req.body);
-    //    if (error) {
-    //       res.status(400).json({message: error.message,}
-    //       )
-    //    }
- 
        const { id } = req.params;
        const result = await Contact.findByIdAndUpdate(id, req.body);
        if (!result) {
         throw HttpError(404, `Contact with id=${id} not found`);
-
-        //   res.status(404).json({
-        //      message: "Not found"})
        }
        res.status(200).json(result)
     } catch (error) {
@@ -112,9 +73,6 @@ const deleteById = async (req, res, next) => {
        const result = await Contact.findByIdAndDelete(id);
        if (!result) {
         throw HttpError(404, `Contact with id=${id} not found`);
-
-        //   return res.status(404).json({
-        //      message: "Not found"})
        }
  
        res.json({
