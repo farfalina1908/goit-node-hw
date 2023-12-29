@@ -1,12 +1,12 @@
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 import User from "../models/User.js"
 
 import {HttpError} from "../helpers/index.js"
 import { ctrlWrapper } from "../decorators/index.js"
 
-const {JWT_SECRET} = process.env
+const {JWT_SECRET} = process.env;
 
 const signup = async(req, res)=>{
 
@@ -36,18 +36,22 @@ const signin = async(req, res)=> {
         throw HttpError(401, "Email or password is wrong")
     }
 
-    const {_id: id} = user
+    const {_id: id} = user;
     const payload = {
         id
-    }
+    };
 
-    const token = jwt.sign(payload, JWT_SECRET, {expiresIn: "23h"})
+    const token =jwt.sign(payload, JWT_SECRET, {expiresIn: "23h"});
+
+    console.log(token)
+    
     res.json({
         token,
-        user: {
-            email: user.email,
-            subscription: user.subscription
-          }
+        // user: {
+        //     email: user.email,
+        //     subscription: user.subscription
+        //   }
+        
     })
 
 }
