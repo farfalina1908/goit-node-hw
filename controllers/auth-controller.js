@@ -25,7 +25,32 @@ res.status(201).json({
 })
 }
 
-const signin = async(req, res)=> {}
+const signin = async(req, res)=> {
+    const {email, password} = req.body
+    const user = await User.findOne({email})
+    if(!user) {
+        throw HttpError(401, "Email or password is wrong")
+    }
+    const passwordCompare = await bcrypt.compare(password, user.password)
+    if(!passwordCompare) {
+        throw HttpError(401, "Email or password is wrong")
+    }
+
+    const {_id: id} = user
+    const payload = {
+        id
+    }
+
+    const token = jwt.sign(payload, JWT_SECRET, {expiresIn: "23h"})
+    res.json({
+        token,
+        user: {
+            email: user.email,
+            subscription: user.subscription
+          }
+    })
+
+}
 
 
 export default {
