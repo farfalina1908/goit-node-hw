@@ -6,7 +6,7 @@ import {userSignupSchema, userSigninSchema} from "../../models/User.js"
 
 const authRouter = express.Router()
 
-authRouter.post("/users/register", isEmptyBody, validateBody(userSignupSchema), authController.signup)
-authRouter.post("/users/login", isEmptyBody, validateBody(userSigninSchema), authController.signin)
+authRouter.post("/register", isEmptyBody, validateBody(userSignupSchema), authController.signup)
+authRouter.post("/login", isEmptyBody, validateBody(userSigninSchema), authController.signin)
 
 export default authRouter;
