@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 import User from "../models/User.js"
 
@@ -50,7 +51,7 @@ const signin = async(req, res)=> {
         // user: {
         //     email: user.email,
         //     subscription: user.subscription
-        //   }
+        //   },
         
     })
 
