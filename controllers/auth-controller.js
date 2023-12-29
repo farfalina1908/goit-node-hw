@@ -57,6 +57,9 @@ const signin = async(req, res)=> {
 
 }
 
+// DB_HOST = mongodb+srv://Olena:GWNQo3zH74tipkTP@cluster0.ml9cauf.mongodb.net/db-contacts?retryWrites=true&w=majority
+// PORT = 3000
+// JWT_SECRET = N4IYsWBXXWQNnFoCubc2MSFjtxk5LMy9
 
 export default {
     signup: ctrlWrapper(signup),
