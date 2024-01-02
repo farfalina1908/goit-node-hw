@@ -61,19 +61,12 @@ await User.findByIdAndUpdate(id, { token });
 }
 
 const getCurrent = async (req, res) => {
-    //  const { _id: id } = req.user;
-    //  const result = await User.findById(id);
-    //  if (!result) {
-    //     throw HttpError(401, { message: "Not authorized" });
-    // }
-    
+     
    const { email, subscription } = req.user;
 
    res.json({
-      user: {
          email,
-         subscription,
-      },
+         subscription,    
    });
 };
 
@@ -83,16 +76,11 @@ const signout = async (req, res) => {
    if (!result) {
        throw HttpError(401, { message: "Not authorized" });
    }
-   await User.findByIdAndUpdate(_id, { token: "" });
+   await User.findByIdAndUpdate(id, { token: "" });
 
    res.status(204).json("No Content"
    );
 };
-
-
-// DB_HOST = mongodb+srv://Olena:GWNQo3zH74tipkTP@cluster0.ml9cauf.mongodb.net/db-contacts?retryWrites=true&w=majority
-// PORT = 3000
-// JWT_SECRET = N4IYsWBXXWQNnFoCubc2MSFjtxk5LMy9
 
 export default {
    signup: ctrlWrapper(signup),
