@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import gravatar from "gravatar"
 
 import User from "../models/User.js"
 
@@ -16,14 +17,18 @@ const user = await User.findOne({email})
 if (user) {
     throw HttpError(409, "Email already in use")
 }
+
+const avatarURL = gravatar.url(email);
 const hashPassword = await bcrypt.hash(password, 10)
 
-const newUser = await User.create({...req.body, password: hashPassword})
+
+const newUser = await User.create({...req.body, password: hashPassword, avatarURL,})
 
     res.status(201).json({
         user: {
             email: newUser.email,
             subscription: newUser.subscription,
+            avatarURL: newUser.avatarURL,
         }
    
 })
