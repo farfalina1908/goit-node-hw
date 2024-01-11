@@ -2,6 +2,9 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import gravatar from "gravatar"
+import fs from "fs/promises"
+import path from "path";
+import Jimp from "jimp";
 
 import User from "../models/User.js"
 
@@ -9,6 +12,8 @@ import {HttpError} from "../helpers/index.js"
 import { ctrlWrapper } from "../decorators/index.js"
 
 const {JWT_SECRET} = process.env;
+
+
 
 const signup = async(req, res)=>{
 
@@ -19,6 +24,7 @@ if (user) {
 }
 
 const avatarURL = gravatar.url(email);
+// const avatarsPath = path.resolve("public", "avatars")
 const hashPassword = await bcrypt.hash(password, 10)
 
 
@@ -32,6 +38,23 @@ const newUser = await User.create({...req.body, password: hashPassword, avatarUR
         }
    
 })
+
+// const {path: oldPath, filename} = req.file;
+
+// const newPath = path.join(avatarsPath, filename);
+// await fs.rename(avatarURL, newPath);
+// const avatar = path.join("avatars", filename);
+
+// const newUser = await User.create({...req.body, password: hashPassword, avatar,})
+
+//     res.status(201).json({
+//         user: {
+//             email: newUser.email,
+//             subscription: newUser.subscription,
+//             avatarURL: newUser.avatar,
+//         }
+   
+// })
 }
 
 const signin = async(req, res)=> {
@@ -87,9 +110,34 @@ const signout = async (req, res) => {
    );
 };
 
+const avatarDir = path.resolve("public", "avatars");
+
+
+const updateAvatar = async (req, res) => {
+  const { _id: id } = req.user;
+  const { path: tempUpload, originalname } = req.file;
+ 
+  
+  const imageName = `${id}_${originalname}`;
+  
+  try {
+    const resultUpload = path.join(avatarDir, imageName);
+    await fs.rename(tempUpload, resultUpload);
+    const file = await Jimp.read(resultUpload);
+    await file.resize(250, 250).write(resultUpload);
+    const avatarURL = path.join("public", "avatars", imageName);
+    await User.findByIdAndUpdate(req.user._id, { avatarURL });
+    res.json({ avatarURL });
+  } catch (error) {
+    await fs.unlink(tempUpload);
+    throw error;
+  }
+};
+
 export default {
    signup: ctrlWrapper(signup),
    signin: ctrlWrapper(signin),
    getCurrent: ctrlWrapper(getCurrent),
    signout: ctrlWrapper(signout),
+   updateAvatar: ctrlWrapper(updateAvatar),
 };
