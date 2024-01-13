@@ -1,6 +1,7 @@
 import express from "express"
 import request from "supertest";
 import authController from "./auth-controller.js"
+import app from "../app.js";
 
 describe("Signup Controller Tests", () => {
     it("should signup a new user successfully", async () => {
@@ -10,9 +11,9 @@ describe("Signup Controller Tests", () => {
       };
   
       const response = await request(app)
-        .post("/signup")
-        .send(userData)
-        .expect(201);
+         .post("/register")
+         .send(userData)
+         .expect(201);
   
       expect(response.body).toHaveProperty("token");
       expect(typeof response.body.token).toBe("string");
@@ -29,12 +30,12 @@ describe("Signup Controller Tests", () => {
       };
   
       // Assume existing user is already signed up
-      await request(app).post("/signup").send(existingUser).expect(201);
+      await request(app).post("/register").send(existingUser).expect(201);
   
       const response = await request(app)
-        .post("/signup")
-        .send(existingUser)
-        .expect(409);
+         .post("/register")
+         .send(existingUser)
+         .expect(409);
   
       expect(response.body).toHaveProperty("message", "Email already in use");
     });

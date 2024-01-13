@@ -24,7 +24,7 @@ if (user) {
 }
 
 const avatarURL = gravatar.url(email);
-// const avatarsPath = path.resolve("public", "avatars")
+
 const hashPassword = await bcrypt.hash(password, 10)
 
 
@@ -38,23 +38,6 @@ const newUser = await User.create({...req.body, password: hashPassword, avatarUR
         }
    
 })
-
-// const {path: oldPath, filename} = req.file;
-
-// const newPath = path.join(avatarsPath, filename);
-// await fs.rename(avatarURL, newPath);
-// const avatar = path.join("avatars", filename);
-
-// const newUser = await User.create({...req.body, password: hashPassword, avatar,})
-
-//     res.status(201).json({
-//         user: {
-//             email: newUser.email,
-//             subscription: newUser.subscription,
-//             avatarURL: newUser.avatar,
-//         }
-   
-// })
 }
 
 const signin = async(req, res)=> {
