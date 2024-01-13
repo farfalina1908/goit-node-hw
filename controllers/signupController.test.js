@@ -14,11 +14,11 @@ describe("test /users /register route", () => {
   let server = null
   beforeAll(async () => { 
     await mongoose.connect(DB_TEST_HOST);
-    server = app.listen(3000)
+    server = app.listen(PORT);
   })
   afterAll(async () => {
-    await mongoose.connection.close();
-    server.close();
+     await mongoose.connection.close();
+     server.close(); 
   });
   afterEach(async () => {
     await User.deleteMany();
