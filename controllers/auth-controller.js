@@ -115,7 +115,7 @@ if (!req.file) {
     await fs.rename(tempUpload, resultUpload);
     const file = await Jimp.read(resultUpload);
     await file.resize(250, 250).write(resultUpload);
-    const avatarURL = path.join("public", "avatars", imageName);
+    const avatarURL = path.join("avatars", imageName);
     await User.findByIdAndUpdate(req.user._id, { avatarURL });
     res.json({ avatarURL });
   } catch (error) {
