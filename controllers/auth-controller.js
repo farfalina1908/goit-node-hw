@@ -97,7 +97,14 @@ const avatarDir = path.resolve("public", "avatars");
 
 
 const updateAvatar = async (req, res) => {
-  const { _id: id } = req.user;
+    const { _id: id } = req.user;
+    
+if (!req.file) {
+   return res
+      .status(400)
+      .json({ error: "No file provided for avatar update." });
+}
+
   const { path: tempUpload, originalname } = req.file;
  
   
