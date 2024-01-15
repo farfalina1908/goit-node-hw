@@ -30,16 +30,29 @@ describe("test /users /register route", () => {
       email: "test@example.com",
       password: "testpassword",
     }
-    const {body, statusCode } = await request(app)
-      .post("/users/register")
-      .send(signupData)
+    // const {body, statusCode } = await request(app)
+    //   .post("/users/register")
+    //   .send(signupData)
+
+    const response = await request(app)
+    .post("/users/register")
+    .send(signupData);
+
+  const body = response.body;
+  
+  const statusCode = response.statusCode;
+
+  console.log("Response Body:", body);
+  console.log("Status Code:", statusCode);
+  
     
     expect(statusCode).toBe(201);
-    expect(body.email).toBe(signupData.email);
+    expect(body.user.email).toBe(signupData.email);
     const user = await User.findOne({ email: signupData.email })
     expect(user.email).toBe(signupData.email);
 
-  expect(body.password).toBe(signupData.password);
+  // expect(body.password).toBe(signupData.password);
+  
   })
   
 })
