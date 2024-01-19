@@ -15,11 +15,12 @@ import { ctrlWrapper } from "../decorators/index.js"
 const {JWT_SECRET, BASE_URL} = process.env;
 
 
-
 const signup = async(req, res)=>{
 
 const {email, password} = req.body
 const user = await User.findOne({email})
+
+
 if (user) {
     throw HttpError(409, "Email already in use")
 }
@@ -27,14 +28,16 @@ if (user) {
 const avatarURL = gravatar.url(email);
 
 const hashPassword = await bcrypt.hash(password, 10)
-const verificationCode = nanoid()
 
-const newUser = await User.create({...req.body, password: hashPassword, verificationCode, avatarURL,})
+const verificationToken = nanoid()
+
+
+const newUser = await User.create({...req.body, password: hashPassword, verificationToken, avatarURL,})
 
 const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: `<a target = "_blank" href = "${BASE_URL}/users/verify/${verificationCode}">Click to verify email</a>`,
+    html: `<a target = "_blank" href = "${BASE_URL}/users/verify/${verificationToken}">Click to verify email</a>`,
 }
 
 await sendEmail(verifyEmail)
@@ -50,12 +53,17 @@ await sendEmail(verifyEmail)
 }
 
 const verify = async(req, res) => {
-const {verificationCode} = req.params;
-const user = await User.findOne({verificationCode})
+
+const {verificationToken} = req.params;
+
+const user = await User.findOne({verificationToken})
 if(!user){
     throw HttpError(404, "Email not found or already verified")
 }
-await User.findByIdAndUpdate(user._id, {verify: true, verificationCode: ""})
+
+await User.findByIdAndUpdate(user._id, {verify: true})
+
+
 res.json({
     message: "Email successfully verified"
 })
@@ -73,7 +81,7 @@ if(user.verify) {
 const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: `<a target = "_blank" href = "${BASE_URL}/users/verify/${user.verificationCode}">Click to verify email</a>`,
+    html: `<a target = "_blank" href = "${BASE_URL}/users/verify/${user.verificationToken}">Click to verify email</a>`,
 }
 await sendEmail(verifyEmail);
 res.json({
