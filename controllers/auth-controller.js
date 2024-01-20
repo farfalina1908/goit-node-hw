@@ -32,7 +32,7 @@ const hashPassword = await bcrypt.hash(password, 10)
 const verificationToken = nanoid()
 
 
-const newUser = await User.create({...req.body, password: hashPassword, verificationToken, avatarURL,})
+const newUser = await User.create({...req.body, password: hashPassword, verificationToken, avatarURL})
 
 const verifyEmail = {
     to: email,
@@ -61,7 +61,7 @@ if(!user){
     throw HttpError(404, "Email not found or already verified")
 }
 
-await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: "" });
+await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: "null" });
 
 
 res.json({
