@@ -61,7 +61,7 @@ if(!user){
     throw HttpError(404, "Email not found or already verified")
 }
 
-await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: 0 });
+await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: null });
 
 
 res.json({
